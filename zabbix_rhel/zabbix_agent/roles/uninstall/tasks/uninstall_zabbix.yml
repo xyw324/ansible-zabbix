@@ -1,0 +1,12 @@
+---
+- name: stop zabbix agentd service
+  shell: pkill -9 zabbix
+
+- name: delete zabbix_agentd script
+  shell: rm -rf /usr/local/sbin/zabbix_agentd
+
+- name: delete zabbix agentd basedir
+  shell: rm -rf {{ zabbix_dir }}
+
+- name: delete zabbix user
+  user: name=zabbix state=absent remove=yes

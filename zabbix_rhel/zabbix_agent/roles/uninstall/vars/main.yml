@@ -1,0 +1,3 @@
+zabbix_dir: /usr/local/zabbix-agent
+zabbix_agentd_port: 10050
+zabbix_server_ip: 10.0.4.30

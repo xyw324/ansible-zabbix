@@ -1,0 +1,3 @@
+---
+- name: Create zabbix user
+  user: name={{ zabbix_user }} state=present createhome=no shell=/sbin/nologin

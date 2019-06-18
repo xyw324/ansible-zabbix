@@ -1,0 +1,56 @@
+---
+- name: Copy zabbix agentd code file to clients
+  copy: src=zabbix-{{ zabbix_version }}.tar.gz dest=/usr/local/src/zabbix-{{ zabbix_version }}.tar.gz
+        owner=root group=root
+
+- name: Uncompression zabbix-{{ zabbix_version }}.tar.gz
+  shell: tar zxf /usr/local/src/zabbix-{{ zabbix_version }}.tar.gz -C /usr/local/src/
+
+- name: Configure the install zabbix-agent
+  command: ./configure --prefix=/usr/local/zabbix-agent --enable-agent
+  args:
+    chdir: /usr/local/src/zabbix-{{ zabbix_version }}
+
+- name: Make zabbix-agent
+  command: make
+  args:
+    chdir: /usr/local/src/zabbix-{{ zabbix_version }}
+
+- name: Make install zabbix-agent
+  command: make install 
+  args:
+    chdir: /usr/local/src/zabbix-{{ zabbix_version }}
+
+- name: Copy zabbix start script
+  command: cp -p /usr/local/zabbix-agent/sbin/zabbix_agentd /etc/init.d/
+
+- name: Copy zabbix config file
+  template: src=zabbix_agentd.conf dest={{ zabbix_dir }}/etc/zabbix_agentd.conf
+            owner={{ zabbix_user }} group={{ zabbix_user }} mode=0644
+
+- name: Modify zabbix basedir permisson
+  file: path={{ zabbix_dir }} owner={{ zabbix_user }} group={{ zabbix_user }} mode=0755 recurse=yes
+
+- name: Link zabbix_agentd command
+  shell: ln -s {{ zabbix_dir }}/sbin/zabbix_agentd /usr/local/sbin/zabbix_agentd
+
+- name: Delete zabbix-{{ zabbix_version }}.tar.gz source file
+  shell: rm -rf /usr/local/src/zabbix-{{ zabbix_version }}.tar.gz
+
+- name: Make scripts dir
+  shell: mkdir {{ zabbix_dir }}/scripts
+
+- name: Copy zabbix cpu monitor file
+  template: src=cpuinfo.sh  dest={{ zabbix_dir }}/scripts/
+            owner={{ zabbix_user }} group={{ zabbix_user }} mode=0755
+
+- name: Copy zabbix iodiscovery monitor file1
+  copy: src=discover_disk.pl  dest={{ zabbix_dir }}/scripts/
+            owner={{ zabbix_user }} group={{ zabbix_user }} mode=0755
+
+- name: Copy zabbix iodiscovery monitor file2
+  template: src=zbx_parse_iostat_values.sh  dest={{ zabbix_dir }}/scripts/
+            owner={{ zabbix_user }} group={{ zabbix_user }} mode=0755
+
+- name: Copy zabbix iodiscovery  monitor config file
+  template: src=agentconfig  dest=/tmp/

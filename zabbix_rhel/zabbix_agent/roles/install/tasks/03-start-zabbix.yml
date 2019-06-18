@@ -1,0 +1,12 @@
+---
+- name: Add iodicovery config
+  shell: cat /tmp/agentconfig >> {{ zabbix_dir }}/etc/zabbix_agentd.conf
+
+- name: Start zabbix service
+  shell: /usr/local/zabbix-agent/sbin/zabbix_agentd
+
+- name: Add boot start zabbix service
+  shell: echo "/usr/local/zabbix-agent/sbin/zabbix_agentd" >> /etc/rc.local
+  
+- name: Add netstat privilege
+  shell: chmod +s /bin/netstat

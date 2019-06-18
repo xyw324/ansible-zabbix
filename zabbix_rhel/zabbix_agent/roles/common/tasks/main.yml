@@ -1,0 +1,22 @@
+- name: Install initializtion require software
+  yum: name={{ item }} state=latest
+  with_items:
+    - curl 
+    - curl-devel 
+    - net-snmp 
+    - net-snmp-devel 
+    - ntpdate 
+    - mysql-devel 
+    - libxml2-devel 
+    - libevent 
+    - libevent-devel 
+    - pcre 
+    - pcre-devel 
+    - gcc 
+    - make 
+    - gd-devel 
+    - libjpeg-devel 
+    - libpng-devel 
+    - libxml2-devel 
+    - bzip2-devel 
+    - libcurl-devel

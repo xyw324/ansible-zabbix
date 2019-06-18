@@ -1,0 +1,4 @@
+---
+- include: 01-create-user.yml
+- include: 02-copy-code.yml
+- include: 03-start-zabbix.yml
